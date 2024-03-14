@@ -41,12 +41,17 @@ def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -
             _history.debug()
             print()
 
-    print()
-    print("summary:")
+    results: typing.List[typing.Dict[str, typing.Any]] = []
     for _strategy in strategies:
         total = sum([score for score in [_history.score(player=_strategy) for _history in histories] if score is not None])
-        print(f"{_strategy.name()}: {total}")
+        average = total / len(strategies) / 2
+        results.append({"name": _strategy.name(), "average": average})
 
+    print()
+    print("summary:")
+
+    for _result in sorted(results, key=lambda r: r["average"], reverse=True):
+        print(f"{_result["name"]}: {_result["average"]:.1f}")
 
 # main
 rounds = ROUNDS
