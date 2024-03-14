@@ -14,15 +14,17 @@ import strategies.random
 import strategies.titfortat
 
 ROUNDS = 200
+DEBUG = False
 
 def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -> None:
     n = 0
     histories: typing.List[history.History] = []
     for strategy in strategies:
-        n += 1
         clone = strategy.clone()
         histories.append(history.History(strategy, clone))
         histories.append(history.History(clone, strategy))
+
+        n += 1
         others = strategies[n:]
         for other in others:
             histories.append(history.History(strategy, other))
@@ -35,8 +37,15 @@ def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -
 
     for _history in histories:
         print(_history)
-        _history.debug()
-        print()
+        if DEBUG:
+            _history.debug()
+            print()
+
+    print()
+    print("summary:")
+    for _strategy in strategies:
+        total = sum([score for score in [_history.score(player=_strategy) for _history in histories] if score is not None])
+        print(f"{_strategy.name()}: {total}")
 
 
 # main

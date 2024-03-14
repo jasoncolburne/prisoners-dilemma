@@ -51,7 +51,7 @@ class History:
     def __str__(self) -> str:
         p1 = self._players[0].name()
         p2 = self._players[1].name()
-        return f"{{ {p1}: {self._score[p1]}, {p2}: {self._score[p2]} }}"
+        return f"{p1}: {self._score[p1]}, {p2}: {self._score[p2]}"
 
     def debug(self) -> None:
         p1 = self._players[0].name()
@@ -59,3 +59,9 @@ class History:
 
         print(f"{' ' * max(len(p2) - len(p1), 0) + p1}: {''.join('✓' if b else '✗' for b in self._history[p1])}")
         print(f"{' ' * max(len(p1) - len(p2), 0) + p2}: {''.join('✓' if b else '✗' for b in self._history[p2])}")
+
+    def score(self, player: strategy.Strategy) -> int | None:
+        if player.name() in self._score.keys():
+            return self._score[player.name()]
+
+        return None

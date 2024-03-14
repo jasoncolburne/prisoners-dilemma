@@ -2,7 +2,7 @@ import random
 
 class Strategy:
     def __init__(self):
-        self._name = f"{self.__class__.__name__}{random.randint(0,1000)}"
+        self._name = f"{self.__class__.__name__}{random.randint(0,9999)}"
         
     def name(self):
         return self._name
