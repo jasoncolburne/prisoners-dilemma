@@ -27,9 +27,9 @@ def simulate(_strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) 
     n = 0
     histories: typing.List[history.History] = []
     for _strategy in _strategies:
-        clone = _strategy.clone()
-        histories.append(history.History(_strategy, clone))
-        histories.append(history.History(clone, _strategy))
+        twin = _strategy.clone()
+        histories.append(history.History(_strategy, twin))
+        histories.append(history.History(twin, _strategy))
 
         n += 1
         others = _strategies[n:]
