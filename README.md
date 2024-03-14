@@ -45,7 +45,7 @@ class TitForTwoTats(strategy.Strategy):
         if len(opponent_history) < 2:
             return True
 
-        if not (opponent_history[-1] or opponent_history[-2]):
+        if not any(opponent_history[-2:]):
             return False
 
         return True
