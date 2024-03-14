@@ -20,6 +20,7 @@ import strategies.titfortat
 ROUNDS = 200
 DEBUG = False
 
+
 def simulate(_strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -> None:
     """Simulates the classic prisoner's dilemma tournament"""
 

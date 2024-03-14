@@ -10,6 +10,7 @@ import strategy
 
 class TitForTat(strategy.Strategy):
     """TitForTat Implementation"""
+
     def cooperate(self, history) -> bool:
         opponent_history = history.opponent(me=self)
 

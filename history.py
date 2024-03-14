@@ -1,6 +1,7 @@
 """
 A cooperation history between two strategies.
 """
+
 import typing
 
 import strategy
@@ -8,6 +9,7 @@ import strategy
 
 class History:
     """History Immplementation"""
+
     def __init__(
         self, player_one: strategy.Strategy, player_two: strategy.Strategy
     ) -> None:
