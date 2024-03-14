@@ -1,7 +1,15 @@
+"""
+Tit for Tat Strategy
+
+This strategy repeats its opponents last move. Also known as eye for an eye, or
+reciprical.
+"""
+
 import strategy
 
 
 class TitForTat(strategy.Strategy):
+    """TitForTat Implementation"""
     def cooperate(self, history) -> bool:
         opponent_history = history.opponent(me=self)
 

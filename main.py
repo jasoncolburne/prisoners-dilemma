@@ -1,3 +1,7 @@
+"""
+Main
+"""
+
 import random
 import sys
 import typing
@@ -16,22 +20,23 @@ import strategies.titfortat
 ROUNDS = 200
 DEBUG = False
 
+def simulate(_strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -> None:
+    """Simulates the classic prisoner's dilemma tournament"""
 
-def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -> None:
     n = 0
     histories: typing.List[history.History] = []
-    for strategy in strategies:
-        clone = strategy.clone()
-        histories.append(history.History(strategy, clone))
-        histories.append(history.History(clone, strategy))
+    for _strategy in _strategies:
+        clone = _strategy.clone()
+        histories.append(history.History(_strategy, clone))
+        histories.append(history.History(clone, _strategy))
 
         n += 1
-        others = strategies[n:]
+        others = _strategies[n:]
         for other in others:
-            histories.append(history.History(strategy, other))
-            histories.append(history.History(other, strategy))
+            histories.append(history.History(_strategy, other))
+            histories.append(history.History(other, _strategy))
 
-    while any([_history.rounds() < rounds for _history in histories]):
+    while any(_history.rounds() < rounds for _history in histories):
         relevant = [_history for _history in histories if _history.rounds() < rounds]
         random.shuffle(relevant)
         relevant[0].create(1)
@@ -43,17 +48,13 @@ def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -
             print()
 
     results: typing.List[typing.Dict[str, typing.Any]] = []
-    for _strategy in strategies:
+    for _strategy in _strategies:
         total = sum(
-            [
-                score
-                for score in [
-                    _history.score(player=_strategy) for _history in histories
-                ]
-                if score is not None
-            ]
+            score
+            for score in [_history.score(player=_strategy) for _history in histories]
+            if score is not None
         )
-        average = total / len(strategies) / 2
+        average = total / len(_strategies) / 2
         results.append({"name": _strategy.name(), "average": average})
 
     print()
@@ -64,9 +65,8 @@ def simulate(strategies: typing.List[strategy.Strategy], rounds: int = ROUNDS) -
 
 
 # main
-rounds = ROUNDS
 if len(sys.argv) > 1:
-    rounds = int(sys.argv[1])
+    ROUNDS = int(sys.argv[1])
 
 simulate(
     [
@@ -76,5 +76,5 @@ simulate(
         strategies.random.Random(),
         strategies.titfortat.TitForTat(),
     ],
-    rounds=rounds,
+    rounds=ROUNDS,
 )

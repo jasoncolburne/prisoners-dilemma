@@ -1,9 +1,13 @@
+"""
+A cooperation history between two strategies.
+"""
 import typing
 
 import strategy
 
 
 class History:
+    """History Immplementation"""
     def __init__(
         self, player_one: strategy.Strategy, player_two: strategy.Strategy
     ) -> None:
@@ -20,14 +24,17 @@ class History:
         }
 
     def mine(self, me: strategy.Strategy) -> typing.List[bool]:
+        """Returns the history of the player"""
         return self._history[me.name()]
 
     def opponent(self, me: strategy.Strategy) -> typing.List[bool]:
+        """Returns the history of the opponent"""
         return self._history[
             [player.name() for player in self._players if player != me][0]
         ]
 
     def create(self, rounds: int) -> None:
+        """Simulates a number of rounds of play"""
         while rounds > 0:
             p1 = self._players[0]
             one = p1.cooperate(self)
@@ -51,6 +58,7 @@ class History:
             rounds -= 1
 
     def rounds(self) -> int:
+        """Returns the number of rounds played"""
         return len(self._history[self._players[0].name()])
 
     def __str__(self) -> str:
@@ -59,18 +67,22 @@ class History:
         return f"{p1}: {self._score[p1]}, {p2}: {self._score[p2]}"
 
     def debug(self) -> None:
+        """Prints debug information to stdout"""
         p1 = self._players[0].name()
         p2 = self._players[1].name()
 
         print(
-            f"{' ' * max(len(p2) - len(p1), 0) + p1}: {''.join('✓' if b else '✗' for b in self._history[p1])}"
+            f"{' ' * max(len(p2) - len(p1), 0) + p1}: "
+            + f"{''.join('✓' if b else '✗' for b in self._history[p1])}"
         )
         print(
-            f"{' ' * max(len(p1) - len(p2), 0) + p2}: {''.join('✓' if b else '✗' for b in self._history[p2])}"
+            f"{' ' * max(len(p1) - len(p2), 0) + p2}: "
+            + f"{''.join('✓' if b else '✗' for b in self._history[p2])}"
         )
 
     def score(self, player: strategy.Strategy) -> int | None:
-        if player.name() in self._score.keys():
+        """Obtains the current score for a player"""
+        if player.name() in self._score:
             return self._score[player.name()]
 
         return None
