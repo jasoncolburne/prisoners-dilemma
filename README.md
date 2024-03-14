@@ -1,9 +1,8 @@
 # prisoners-dilemma
 
-it should be pretty obvious to an intermediate dev how this works, if they understand
-the [prisoner's dilemma](https://en.wikipedia.org/wiki/Prisoner%27s_dilemma).
+[Prisoner's Dilemma](https://en.wikipedia.org/wiki/Prisoner%27s_dilemma).
 
-## simulating a tournament
+## Simulating a Tournament
 
 ```sh
 make simulate
@@ -15,15 +14,15 @@ or
 make simulate rounds=200
 ```
 
-## adding a strategy
+## Adding a Strategy
 
-add a file in the strategies directory. it should conform to the interface defined in
+Add a file in the strategies directory. It should conform to the interface defined in
 strategy.py (implement cooperate() which should return true to cooperate and false to defect).
 
-after you add the strategy logic, add it to the list at the bottom of main.py after 
-importing.
+To enter the strategy in the tournament, add it to the list at the bottom of main.py
+after importing.
 
-here is a full example:
+Here is a full example:
 
 `strategies/titfortwotats.py`
 ```python
