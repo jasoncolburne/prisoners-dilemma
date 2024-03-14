@@ -2,8 +2,11 @@ import typing
 
 import strategy
 
+
 class History:
-    def __init__(self, player_one: strategy.Strategy, player_two: strategy.Strategy) -> None:
+    def __init__(
+        self, player_one: strategy.Strategy, player_two: strategy.Strategy
+    ) -> None:
         self._players: typing.List[strategy.Strategy] = [player_one, player_two]
 
         self._history: typing.Dict[str, typing.List[bool]] = {
@@ -18,9 +21,11 @@ class History:
 
     def mine(self, me: strategy.Strategy) -> typing.List[bool]:
         return self._history[me.name()]
-    
+
     def opponent(self, me: strategy.Strategy) -> typing.List[bool]:
-        return self._history[[player.name() for player in self._players if player != me][0]]
+        return self._history[
+            [player.name() for player in self._players if player != me][0]
+        ]
 
     def create(self, rounds: int) -> None:
         while rounds > 0:
@@ -47,7 +52,7 @@ class History:
 
     def rounds(self) -> int:
         return len(self._history[self._players[0].name()])
-    
+
     def __str__(self) -> str:
         p1 = self._players[0].name()
         p2 = self._players[1].name()
@@ -57,8 +62,12 @@ class History:
         p1 = self._players[0].name()
         p2 = self._players[1].name()
 
-        print(f"{' ' * max(len(p2) - len(p1), 0) + p1}: {''.join('✓' if b else '✗' for b in self._history[p1])}")
-        print(f"{' ' * max(len(p1) - len(p2), 0) + p2}: {''.join('✓' if b else '✗' for b in self._history[p2])}")
+        print(
+            f"{' ' * max(len(p2) - len(p1), 0) + p1}: {''.join('✓' if b else '✗' for b in self._history[p1])}"
+        )
+        print(
+            f"{' ' * max(len(p1) - len(p2), 0) + p2}: {''.join('✓' if b else '✗' for b in self._history[p2])}"
+        )
 
     def score(self, player: strategy.Strategy) -> int | None:
         if player.name() in self._score.keys():
