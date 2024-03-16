@@ -10,5 +10,5 @@ import strategy
 class Cooperator(strategy.Strategy):
     """Cooperator Implementation"""
 
-    def cooperate(self, _history) -> bool:
+    def cooperate(self, _pairing) -> bool:
         return True

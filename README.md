@@ -39,8 +39,8 @@ import strategy
 class TitForTwoTats(strategy.Strategy):
     """TitForTwoTats Implementation"""
 
-    def cooperate(self, history) -> bool:
-        opponent_history = history.opponent(me=self)
+    def cooperate(self, pairing) -> bool:
+        opponent_history = pairing.opponent_history(me=self)
 
         if len(opponent_history) < 2:
             return True

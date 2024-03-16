@@ -7,7 +7,7 @@ import typing
 import strategy
 
 
-class History:
+class Pairing:
     """History Immplementation"""
 
     def __init__(
@@ -25,15 +25,16 @@ class History:
             player_two.name(): 0,
         }
 
-    def mine(self, me: strategy.Strategy) -> typing.List[bool]:
+    def my_history(self, me: strategy.Strategy) -> typing.List[bool]:
         """Returns the history of the player"""
         return self._history[me.name()]
 
-    def opponent(self, me: strategy.Strategy) -> typing.List[bool]:
+    def opponent_history(self, me: strategy.Strategy) -> typing.List[bool]:
         """Returns the history of the opponent"""
-        return self._history[
-            [player.name() for player in self._players if player != me][0]
-        ]
+        return self._history[self.opponent_name(me=me)]
+
+    def opponent_name(self, me: strategy.Strategy) -> str:
+        return [player.name() for player in self._players if player != me][0]
 
     def create(self, rounds: int) -> None:
         """Simulates a number of rounds of play"""
@@ -61,12 +62,14 @@ class History:
 
     def rounds(self) -> int:
         """Returns the number of rounds played"""
-        return len(self._history[self._players[0].name()])
+        return len(self._history[self._players[1].name()])
 
     def __str__(self) -> str:
         p1 = self._players[0].name()
+        p1_pretty = self._players[0].pretty_name()
         p2 = self._players[1].name()
-        return f"{p1}: {self._score[p1]}, {p2}: {self._score[p2]}"
+        p2_pretty = self._players[1].pretty_name()
+        return f"{p1_pretty}: {self._score[p1]}, {p2_pretty}: {self._score[p2]}"
 
     def debug(self) -> None:
         """Prints debug information to stdout"""
@@ -82,9 +85,18 @@ class History:
             + f"{''.join('✓' if b else '✗' for b in self._history[p2])}"
         )
 
-    def score(self, player: strategy.Strategy) -> int | None:
+    def score(self, player: strategy.Strategy, first_only=False) -> int | None:
         """Obtains the current score for a player"""
-        if player.name() in self._score:
-            return self._score[player.name()]
+        if first_only:
+            if player == self._players[0]:
+                return self._score[player.name()]
+        else:
+            if player.name() in self._score:
+                return self._score[player.name()]
 
         return None
+
+    def opponent_advantage(self, me: strategy.Strategy) -> int:
+        return self.score(
+            player=[player for player in self._players if player != me][0]
+        ) - self.score(player=me)

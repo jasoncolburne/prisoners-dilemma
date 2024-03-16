@@ -14,6 +14,10 @@ class Strategy:
         """Configures a random name"""
         self._name = f"{self.__class__.__name__}{random.randint(0,9999)}"
 
+    def pretty_name(self):
+        """Returns a name without the random identifier"""
+        return self._name.strip("0123456789")
+
     def name(self):
         """Returns the player's name"""
         return self._name
