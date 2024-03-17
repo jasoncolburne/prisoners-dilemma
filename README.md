@@ -5,6 +5,10 @@
 I focused on reproducing the first tournament of Axelrod's Iterated Prisoner's
 Dilemma.
 
+I started on my own and found
+[this](https://github.com/Axelrod-Python/Axelrod/blob/dev/axelrod/strategies/axelrod_first.py)
+after creating the first few strategies.
+
 I took a lot of ideas from the `axelrod` python implementation, however I found
 it did not produce accurate results for the first tournament. I needed to tweak
 Downing and Graaskamp in particular, after reading how they were respomnsible for
