@@ -17,7 +17,7 @@ class Davis(strategy.Strategy):
         if len(opponent_history) < 10:
             return True
 
-        if any(cooperated == False for cooperated in opponent_history[10:]):
+        if any(cooperated is False for cooperated in opponent_history[10:]):
             return False
 
         return True

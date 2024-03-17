@@ -15,6 +15,7 @@ class Feld(strategy.Strategy):
     """Feld Implementation"""
 
     def probability_of_cooperation(self, rounds):
+        """Feld specific"""
         if rounds > 200:
             return 0.5
 

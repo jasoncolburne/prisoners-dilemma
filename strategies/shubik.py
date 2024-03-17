@@ -11,23 +11,16 @@ Martin Shubik's Strategy
 > (1, 1) steady state."
 """
 
-import typing
-
 import strategy
 
 
 class Shubik(strategy.Strategy):
     """Shubik Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-
-        super().__init__()
-
     def cooperate(self, pairing) -> bool:
-        opponent_name = pairing.opponent_name(me=self)
-        strategy_history = pairing.my_history(me=self)
-        opponent_history = pairing.opponent_history(me=self)
+        (opponent_name, opponent_history, strategy_history) = (
+            pairing.name_and_histories(me=self)
+        )
 
         if pairing.rounds() == 0:
             self._state[opponent_name] = {

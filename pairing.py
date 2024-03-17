@@ -25,6 +25,16 @@ class Pairing:
             player_two.name(): 0,
         }
 
+    def players(self) -> typing.List[strategy.Strategy]:
+        """Returns players"""
+        return self._players
+
+    def name_and_histories(
+        self, me: strategy.Strategy
+    ) -> typing.Tuple[str, typing.List[bool], typing.List[bool]]:
+        """Returns relevant pairing details"""
+        return (self.opponent_name(me), self.opponent_history(me), self.my_history(me))
+
     def my_history(self, me: strategy.Strategy) -> typing.List[bool]:
         """Returns the history of the player"""
         return self._history[me.name()]
@@ -34,6 +44,7 @@ class Pairing:
         return self._history[self.opponent_name(me=me)]
 
     def opponent_name(self, me: strategy.Strategy) -> str:
+        """Returns the opponent name"""
         return [player.name() for player in self._players if player != me][0]
 
     def create(self, rounds: int) -> None:
@@ -97,6 +108,7 @@ class Pairing:
         return None
 
     def opponent_advantage(self, me: strategy.Strategy) -> int:
+        """Returns the oppoennt advantage"""
         return self.score(
             player=[player for player in self._players if player != me][0]
         ) - self.score(player=me)

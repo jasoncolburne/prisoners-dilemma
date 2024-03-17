@@ -9,7 +9,6 @@ William Stein and Amnon Rapoport's Strategy
 """
 
 import scipy.stats
-import typing
 
 import strategy
 
@@ -17,17 +16,12 @@ import strategy
 class SteinAndRapoport(strategy.Strategy):
     """SteinAndRapoport Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-
-        super().__init__()
-
     def cooperate(self, pairing) -> bool:
-        opponent_name = pairing.opponent_name(me=self)
-        opponent_history = pairing.opponent_history(me=self)
-        strategy_history = pairing.my_history(me=self)
+        (opponent_name, opponent_history, strategy_history) = (
+            pairing.name_and_histories(me=self)
+        )
 
-        cooperations = sum([1 for cooperated in opponent_history if cooperated])
+        cooperations = sum(1 for cooperated in opponent_history if cooperated)
         defections = len(opponent_history) - cooperations
 
         rounds = pairing.rounds()
@@ -57,8 +51,8 @@ class SteinAndRapoport(strategy.Strategy):
 
         if (rounds + 1) % 15 == 0:
             state["random_opponent"] = (
-                scipy.stats.chisquare([cooperations, defections]).pvalue > 0.05 or
-                state["misplays"] > 3
+                scipy.stats.chisquare([cooperations, defections]).pvalue > 0.05
+                or state["misplays"] > 3
             )
 
         return opponent_history[-1]

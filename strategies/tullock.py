@@ -24,7 +24,7 @@ class Tullock(strategy.Strategy):
         opponent_history = pairing.opponent_history(me=self)
 
         cooperation_count = sum(
-            [1 for cooperated in opponent_history[-10:] if cooperated]
+            1 for cooperated in opponent_history[-10:] if cooperated
         )
         probability_to_cooperate = cooperation_count / 10.0
 

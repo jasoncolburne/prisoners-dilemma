@@ -26,6 +26,7 @@ class Nydegger(strategy.Strategy):
     """Nydegger Implementation"""
 
     def sum(self, strategy_history, opponent_history, index):
+        """Compute the Nydegger sum for a given index"""
         match (strategy_history[index], opponent_history[index]):
             case (True, True):
                 return 0
@@ -37,6 +38,7 @@ class Nydegger(strategy.Strategy):
                 return 3
 
     def compute_a(self, strategy_history, opponent_history):
+        """Compute the A value"""
         return (
             self.sum(strategy_history, opponent_history, -1)
             + self.sum(strategy_history, opponent_history, -2) * 4
@@ -53,7 +55,7 @@ class Nydegger(strategy.Strategy):
             return opponent_history[-1] if len(opponent_history) > 0 else True
 
         if rounds == 2:
-            if opponent_history[-2] == False and opponent_history[-1] == True:
+            if opponent_history[-2] is False and opponent_history[-1] is True:
                 return False
 
             return opponent_history[-1]

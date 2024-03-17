@@ -12,8 +12,8 @@ James Graaskamp's Strategy
 """
 
 import random
+
 import scipy.stats
-import typing
 
 import strategy
 
@@ -21,15 +21,11 @@ import strategy
 class Graaskamp(strategy.Strategy):
     """Graaskamp Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-
-        super().__init__()
-
+    # pylint: disable=too-many-return-statements
     def cooperate(self, pairing) -> bool:
-        opponent_name = pairing.opponent_name(me=self)
-        opponent_history = pairing.opponent_history(me=self)
-        strategy_history = pairing.my_history(me=self)
+        (opponent_name, opponent_history, strategy_history) = (
+            pairing.name_and_histories(me=self)
+        )
 
         if pairing.rounds() == 0:
             self._state[opponent_name] = {
@@ -42,7 +38,7 @@ class Graaskamp(strategy.Strategy):
 
         if pairing.rounds() == 50:
             return False
-        
+
         if pairing.rounds() <= 55:
             return opponent_history[-1]
 
@@ -57,9 +53,11 @@ class Graaskamp(strategy.Strategy):
 
         state = self._state[opponent_name]
 
-        if state["random_opponent"] == False:
-            cooperations = sum([1 for cooperated in opponent_history[-10:] if cooperated])
-            defections = sum([1 for cooperated in opponent_history[-10:] if not cooperated])
+        if state["random_opponent"] is False:
+            cooperations = sum(1 for cooperated in opponent_history[-10:] if cooperated)
+            defections = sum(
+                1 for cooperated in opponent_history[-10:] if not cooperated
+            )
             p_value = scipy.stats.chisquare([cooperations, defections]).pvalue
             state["random_opponent"] = p_value > 0.05
             # state["random_opponent"] = abs(cooperations - defections) < 5

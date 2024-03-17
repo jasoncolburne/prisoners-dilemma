@@ -38,9 +38,12 @@ SORTED = True  # set to False to preserve tournament ordering as results may dif
 def simulate(
     _strategies: typing.List[strategy.Strategy],
     rounds: int = ROUNDS,
-    debug_strategies: typing.List[str] = [],
+    debug_strategies: typing.List[str] = None,
 ) -> None:
     """Simulates the classic prisoner's dilemma tournament"""
+
+    if debug_strategies is None:
+        debug_strategies = []
 
     n = 0
     pairings: typing.List[pairing.Pairing] = []
@@ -61,7 +64,7 @@ def simulate(
         relevant[0].create(1)
 
     for _pairing in pairings:
-        if DEBUG and _pairing._players[0].pretty_name() in debug_strategies:
+        if DEBUG and _pairing.players()[0].pretty_name() in debug_strategies:
             print(_pairing)
             _pairing.debug()
             print()
@@ -94,7 +97,9 @@ def simulate(
     print("".rjust(22) + "  ".join([_result["name"][:3] for _result in results]))
     for _result in results:
         print(
-            f"{_result['name'].rjust(20)}: {'  '.join([f'{str(score).rjust(3)}' for score in _result['scores']])} | {_result['average']:.1f}"
+            f"{_result['name'].rjust(20)}: "
+            + "  ".join([f"{str(score).rjust(3)}" for score in _result["scores"]])
+            + +f"| {_result['average']:.1f}"
         )
 
 

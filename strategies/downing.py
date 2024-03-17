@@ -1,12 +1,12 @@
 """
 Leslie Downing's Strategy
 
-The original version came from https://github.com/Axelrod-Python/Axelrod/blob/v4.13.0/axelrod/strategies/axelrod_first.py#L75-L229
+The original version came from:
+https://github.com/Axelrod-Python/Axelrod/blob/v4.13.0/axelrod/strategies/axelrod_first.py#L75-L229
 
-The revised version came from https://github.com/Axelrod-Python/TourExec/blob/master/src/strategies/K59R.f
+The revised version came from:
+https://github.com/Axelrod-Python/TourExec/blob/master/src/strategies/K59R.f
 """
-
-import typing
 
 import strategy
 
@@ -14,15 +14,10 @@ import strategy
 class Downing(strategy.Strategy):
     """Downing Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-
-        super().__init__()
-
     def cooperate(self, pairing) -> bool:
-        opponent_name = pairing.opponent_name(me=self)
-        opponent_history = pairing.opponent_history(me=self)
-        strategy_history = pairing.my_history(me=self)
+        (opponent_name, opponent_history, strategy_history) = (
+            pairing.name_and_histories(me=self)
+        )
 
         if pairing.rounds() == 0:
             coop = 1.0 if len(opponent_history) > 0 else 0.0
@@ -34,20 +29,18 @@ class Downing(strategy.Strategy):
             return False
 
         if pairing.rounds() == 1:
-            if opponent_history[-1] == True:
+            if opponent_history[-1] is True:
                 self._state[opponent_name]["cooperations_after_defection"] += 1
 
             return False
 
-        if opponent_history[-1] == True:
-            if strategy_history[-1] == True:
+        if opponent_history[-1] is True:
+            if strategy_history[-1] is True:
                 self._state[opponent_name]["cooperations_after_cooperation"] += 1
             else:
                 self._state[opponent_name]["cooperations_after_defection"] += 1
 
-        strategy_cooperations = sum(
-            [1 for cooperated in strategy_history if cooperated]
-        )
+        strategy_cooperations = sum(1 for cooperated in strategy_history if cooperated)
         alpha = (
             self._state[opponent_name]["cooperations_after_cooperation"]
             / (strategy_cooperations)
@@ -61,10 +54,8 @@ class Downing(strategy.Strategy):
             / strategy_defections
         )
 
-        expected_value_of_cooperating = alpha * 3.0 # 1.5
-        expected_value_of_defecting = beta * 5.0 + (1 - beta) # 2.5 - 0.5 = 2 
-
-        # print(f'{pairing._players} ec: {expected_value_of_cooperating}, ed: {expected_value_of_defecting}')
+        expected_value_of_cooperating = alpha * 3.0  # 1.5
+        expected_value_of_defecting = beta * 5.0 + (1 - beta)  # 2.5 - 0.5 = 2
 
         if expected_value_of_cooperating > expected_value_of_defecting:
             return True
@@ -77,15 +68,10 @@ class Downing(strategy.Strategy):
 class RevisedDowning(strategy.Strategy):
     """Revised Downing Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-
-        super().__init__()
-
     def cooperate(self, pairing) -> bool:
-        opponent_name = pairing.opponent_name(me=self)
-        opponent_history = pairing.opponent_history(me=self)
-        strategy_history = pairing.my_history(me=self)
+        (opponent_name, opponent_history, strategy_history) = (
+            pairing.name_and_histories(me=self)
+        )
 
         # _pairing.rounds() is updated after both players play, but we must check
         # opponent data even in the middle of the first round
@@ -115,7 +101,7 @@ class RevisedDowning(strategy.Strategy):
             else:
                 state["nice2"] += 1
 
-        total_cooperations = sum([1 for cooperated in strategy_history if cooperated])
+        total_cooperations = sum(1 for cooperated in strategy_history if cooperated)
         total_defections = len(strategy_history) - total_cooperations
 
         good = (

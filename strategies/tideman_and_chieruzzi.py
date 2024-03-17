@@ -13,25 +13,17 @@ Nicholas Tideman and Paula Chieruzzi's Strategy
 > started. The program defects automatically on the last two moves."
 """
 
-import typing
-
 import strategy
 
 
 class TidemanAndChieruzzi(strategy.Strategy):
     """TidemanAndChieruzzi Implementation"""
 
-    def __init__(self):
-        self._state: typing.List[typing.Dict[str, typing.Any]] = dict()
-        super().__init__()
-
     def _compute_fresh_start(self, pairing):
         opponent_name = pairing.opponent_name(me=self)
         state = self._state[opponent_name]
 
-        if (
-            state["fresh_start"] > 0
-        ):  # todo see if it needs turning off and turn off and return
+        if state["fresh_start"] > 0:
             return
 
         if pairing.opponent_advantage(me=self) > -10:
@@ -48,14 +40,14 @@ class TidemanAndChieruzzi(strategy.Strategy):
         if pairing.rounds() > 190:
             return
 
-        cooperations = sum([1 for cooperated in opponent_history if cooperated])
-        defections = sum([1 for cooperated in opponent_history if not cooperated])
+        cooperations = sum(1 for cooperated in opponent_history if cooperated)
+        defections = sum(1 for cooperated in opponent_history if not cooperated)
 
-        N = cooperations + defections
+        n = cooperations + defections
         # std_dev = sqrt(N*p*(1-p)) where p is 1 / 2.
-        std_deviation = (N ** (1 / 2)) / 2
-        lower = N / 2 - 3 * std_deviation
-        upper = N / 2 + 3 * std_deviation
+        std_deviation = (n ** (1 / 2)) / 2
+        lower = n / 2 - 3 * std_deviation
+        upper = n / 2 + 3 * std_deviation
         if (
             state["opponent_defections"] <= lower
             or state["opponent_defections"] >= upper
@@ -85,7 +77,7 @@ class TidemanAndChieruzzi(strategy.Strategy):
         if pairing.rounds() >= 198:
             return False
 
-        if len(opponent_history) > 0 and opponent_history[-1] == False:
+        if len(opponent_history) > 0 and opponent_history[-1] is False:
             state["opponent_defections"] += 1
 
         self._compute_fresh_start(pairing)
@@ -98,7 +90,7 @@ class TidemanAndChieruzzi(strategy.Strategy):
             state["retaliations"] -= 1
             return False
 
-        if len(opponent_history) > 0 and opponent_history[-1] == False:
+        if len(opponent_history) > 0 and opponent_history[-1] is False:
             state["retaliation_length"] += 1
             state["retaliations"] = state["retaliation_length"]
             state["retaliations"] -= 1
