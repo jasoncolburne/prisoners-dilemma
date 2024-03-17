@@ -14,8 +14,10 @@ it did not produce accurate results for the first tournament. I needed to tweak
 Downing and Graaskamp in particular, after reading how they were respomnsible for
 determining the winners.
 
-It was actually quite hard to make Tit-for-Tat win, I think this may be worthy of
-some discussion. The nice strategies still come out on top.
+It is actually quite hard to make Tit-for-Tat win, I think this may be worthy of
+some discussion. The nice strategies still come out on top. Grofman and Nydegger
+seem to win a lot when tweaking the other strategies, which is interesting because
+Nydegger is essentially a stooge.
 
 ## Simulating a Tournament
 

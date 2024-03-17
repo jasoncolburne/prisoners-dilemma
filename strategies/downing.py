@@ -45,7 +45,7 @@ class Downing(strategy.Strategy):
             self._state[opponent_name]["cooperations_after_cooperation"]
             / (strategy_cooperations)
             if strategy_cooperations != 0
-            else 1.0 / 3
+            else 0.37
         )
 
         strategy_defections = len(strategy_history) - strategy_cooperations
