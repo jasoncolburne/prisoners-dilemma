@@ -64,7 +64,7 @@ class TidemanAndChieruzzi(strategy.Strategy):
             state["retaliations"] = 0
             state["retaliation_length"] = 0
             state["opponent_defections"] = 0
-            state["fresh_start"] = 2
+            state["fresh_start"] = 1
             state["last_fresh_start_rounds"] = pairing.rounds()
 
     def cooperate(self, pairing) -> bool:
@@ -79,18 +79,14 @@ class TidemanAndChieruzzi(strategy.Strategy):
                 "fresh_start": 0,
                 "last_fresh_start_rounds": 0,
             }
-            return True
 
         state = self._state[opponent_name]
 
         if pairing.rounds() >= 198:
             return False
 
-        if not opponent_history[-1]:
+        if len(opponent_history) > 0 and opponent_history[-1] == False:
             state["opponent_defections"] += 1
-            return False
-
-        # self.score_last_round()
 
         self._compute_fresh_start(pairing)
 
@@ -102,7 +98,7 @@ class TidemanAndChieruzzi(strategy.Strategy):
             state["retaliations"] -= 1
             return False
 
-        if not opponent_history[-1]:
+        if len(opponent_history) > 0 and opponent_history[-1] == False:
             state["retaliation_length"] += 1
             state["retaliations"] = state["retaliation_length"]
             state["retaliations"] -= 1

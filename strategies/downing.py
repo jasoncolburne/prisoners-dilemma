@@ -34,13 +34,13 @@ class Downing(strategy.Strategy):
             return False
 
         if pairing.rounds() == 1:
-            if opponent_history[-1]:
+            if opponent_history[-1] == True:
                 self._state[opponent_name]["cooperations_after_defection"] += 1
 
             return False
 
-        if opponent_history[-1]:
-            if strategy_history[-1]:
+        if opponent_history[-1] == True:
+            if strategy_history[-1] == True:
                 self._state[opponent_name]["cooperations_after_cooperation"] += 1
             else:
                 self._state[opponent_name]["cooperations_after_defection"] += 1
@@ -52,7 +52,7 @@ class Downing(strategy.Strategy):
             self._state[opponent_name]["cooperations_after_cooperation"]
             / (strategy_cooperations)
             if strategy_cooperations != 0
-            else 0.5
+            else 1.0 / 3
         )
 
         strategy_defections = len(strategy_history) - strategy_cooperations
@@ -61,8 +61,10 @@ class Downing(strategy.Strategy):
             / strategy_defections
         )
 
-        expected_value_of_cooperating = alpha * 3
-        expected_value_of_defecting = beta * 5 + (1 - beta) * 1
+        expected_value_of_cooperating = alpha * 3.0 # 1.5
+        expected_value_of_defecting = beta * 5.0 + (1 - beta) # 2.5 - 0.5 = 2 
+
+        # print(f'{pairing._players} ec: {expected_value_of_cooperating}, ed: {expected_value_of_defecting}')
 
         if expected_value_of_cooperating > expected_value_of_defecting:
             return True

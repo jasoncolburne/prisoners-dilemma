@@ -32,22 +32,19 @@ class Graaskamp(strategy.Strategy):
         strategy_history = pairing.my_history(me=self)
 
         if pairing.rounds() == 0:
-            self._state[opponent_name] = {"last_defection": 0}
+            self._state[opponent_name] = {
+                "last_defection": 0,
+                "random_opponent": False,
+            }
 
         if pairing.rounds() < 50:
             return opponent_history[-1] if len(opponent_history) > 0 else True
 
         if pairing.rounds() == 50:
             return False
-
-        cooperations = sum([1 for cooperated in opponent_history if cooperated])
-        defections = sum([1 for cooperated in opponent_history if not cooperated])
-        p_value = scipy.stats.chisquare([cooperations, defections]).pvalue
-
-        random_opponent = p_value > 0.1
-
-        if random_opponent:
-            return False
+        
+        if pairing.rounds() <= 55:
+            return opponent_history[-1]
 
         if all(
             opponent_history[i] == strategy_history[i - 1]
@@ -59,6 +56,17 @@ class Graaskamp(strategy.Strategy):
             return True
 
         state = self._state[opponent_name]
+
+        if state["random_opponent"] == False:
+            cooperations = sum([1 for cooperated in opponent_history[-10:] if cooperated])
+            defections = sum([1 for cooperated in opponent_history[-10:] if not cooperated])
+            p_value = scipy.stats.chisquare([cooperations, defections]).pvalue
+            state["random_opponent"] = p_value > 0.05
+            # state["random_opponent"] = abs(cooperations - defections) < 5
+
+        if state["random_opponent"]:
+            return False
+
         if random.randint(5, 15) + state["last_defection"] < len(strategy_history):
             state["last_defection"] = len(strategy_history) + 1
             return False

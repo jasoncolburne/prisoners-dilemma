@@ -25,6 +25,7 @@ class SteinAndRapoport(strategy.Strategy):
     def cooperate(self, pairing) -> bool:
         opponent_name = pairing.opponent_name(me=self)
         opponent_history = pairing.opponent_history(me=self)
+        strategy_history = pairing.my_history(me=self)
 
         cooperations = sum([1 for cooperated in opponent_history if cooperated])
         defections = len(opponent_history) - cooperations
@@ -32,7 +33,10 @@ class SteinAndRapoport(strategy.Strategy):
         rounds = pairing.rounds()
 
         if rounds == 0:
-            self._state[opponent_name] = {"random_opponent": False}
+            self._state[opponent_name] = {
+                "random_opponent": False,
+                "misplays": 0,
+            }
 
         if rounds < 4:
             return True
@@ -45,12 +49,16 @@ class SteinAndRapoport(strategy.Strategy):
 
         state = self._state[opponent_name]
 
-        if (rounds + 1) % 15 == 0:
-            state["random_opponent"] = (
-                scipy.stats.chisquare([cooperations, defections]).pvalue > 0.05
-            )
-
         if state["random_opponent"]:
             return False
+
+        if strategy_history[-2] != opponent_history[-1]:
+            state["misplays"] += 1
+
+        if (rounds + 1) % 15 == 0:
+            state["random_opponent"] = (
+                scipy.stats.chisquare([cooperations, defections]).pvalue > 0.05 or
+                state["misplays"] > 3
+            )
 
         return opponent_history[-1]

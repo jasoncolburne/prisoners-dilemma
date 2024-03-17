@@ -19,7 +19,7 @@ Rudy Nydegger's Strategy
 import strategy
 
 
-DEFECTIVE = [1, 6, 7, 17, 22, 23, 26, 29, 30, 31, 33, 38, 39, 45, 49, 54, 55, 58, 61]
+DEFECTIVE = [1, 2, 6, 7, 17, 22, 23, 26, 29, 30, 31, 33, 38, 39, 45, 49, 54, 55, 58, 61]
 
 
 class Nydegger(strategy.Strategy):

@@ -31,8 +31,8 @@ import strategies.titfortwotats
 import strategies.tullock
 
 ROUNDS = 200
-DEBUG = True
-SORTED = False  # set to False to preserve tournament ordering as results may differ
+DEBUG = False
+SORTED = True  # set to False to preserve tournament ordering as results may differ
 
 
 def simulate(
@@ -143,10 +143,11 @@ TOURNAMENT_ONE_STRATEGIES = [
 ]
 
 TEST_STRATEGIES = [
-    strategies.titfortat.TitForTat(),
+    # strategies.titfortat.TitForTat(),
     # strategies.grofman.Grofman(),
     # strategies.nydegger.Nydegger(),
+    strategies.stein_and_rapoport.SteinAndRapoport(),
     strategies.downing.Downing(),
 ]
 
-simulate(TOURNAMENT_ONE_STRATEGIES, rounds=ROUNDS, debug_strategies=["Downing"])
+simulate(TOURNAMENT_ONE_STRATEGIES, rounds=ROUNDS, debug_strategies=["Graaskamp"])
