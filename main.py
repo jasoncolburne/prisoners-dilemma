@@ -150,4 +150,4 @@ TEST_STRATEGIES = [
     strategies.downing.Downing(),
 ]
 
-simulate(TOURNAMENT_ONE_STRATEGIES, rounds=ROUNDS, debug_strategies=["Graaskamp"])
+simulate(TOURNAMENT_ONE_STRATEGIES, rounds=ROUNDS)
