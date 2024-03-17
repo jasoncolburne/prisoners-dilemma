@@ -2,6 +2,17 @@
 
 [Prisoner's Dilemma](https://en.wikipedia.org/wiki/Prisoner%27s_dilemma).
 
+I focused on reproducing the first tournament of Axelrod's Iterated Prisoner's
+Dilemma.
+
+I took a lot of ideas from the `axelrod` python implementation, however I found
+it did not produce accurate results for the first tournament. I needed to tweak
+Downing and Graaskamp in particular, after reading how they were respomnsible for
+determining the winners.
+
+It was actually quite hard to make Tit-for-Tat win, I think this may be worthy of
+some discussion. The nice strategies still come out on top.
+
 ## Simulating a Tournament
 
 ```sh
