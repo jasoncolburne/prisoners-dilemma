@@ -99,7 +99,7 @@ def simulate(
         print(
             f"{_result['name'].rjust(20)}: "
             + "  ".join([f"{str(score).rjust(3)}" for score in _result["scores"]])
-            + +f"| {_result['average']:.1f}"
+            + f"| {_result['average']:.1f}"
         )
 
 
