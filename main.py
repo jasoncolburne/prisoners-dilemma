@@ -2,6 +2,7 @@
 Main
 """
 
+import math
 import random
 import sys
 import typing
@@ -33,8 +34,12 @@ import strategies.tullock
 ROUNDS = 200
 DEBUG = False
 SORTED = True  # set to False to preserve tournament ordering as results may differ
+BOTH_DIRECTIONS = (
+    False  # set to True to consider results when starting from both positions
+)
 
 
+# pylint: disable=too-many-locals
 def simulate(
     _strategies: typing.List[strategy.Strategy],
     rounds: int = ROUNDS,
@@ -45,18 +50,20 @@ def simulate(
     if debug_strategies is None:
         debug_strategies = []
 
-    n = 0
     pairings: typing.List[pairing.Pairing] = []
     for _strategy in _strategies:
         twin = _strategy.clone()
         pairings.append(pairing.Pairing(_strategy, twin))
-        pairings.append(pairing.Pairing(twin, _strategy))
+        if BOTH_DIRECTIONS:
+            pairings.append(pairing.Pairing(twin, _strategy))
 
-        n += 1
-        others = _strategies[n:]
+        others = [
+            __strategy
+            for __strategy in _strategies
+            if _strategy.name() != __strategy.name()
+        ]
         for other in others:
             pairings.append(pairing.Pairing(_strategy, other))
-            pairings.append(pairing.Pairing(other, _strategy))
 
     while any(_pairing.rounds() < rounds for _pairing in pairings):
         relevant = [_pairing for _pairing in pairings if _pairing.rounds() < rounds]
@@ -71,16 +78,22 @@ def simulate(
 
     results: typing.List[typing.Dict[str, typing.Any]] = []
     for _strategy in _strategies:
-        player_scores = [
-            score
-            for score in [
-                _pairing.score(player=_strategy, first_only=True)
-                for _pairing in pairings
-            ]
-            if score is not None
-        ]
-        total = sum(player_scores)
-        average = total / len(_strategies)
+
+        player_scores = {}
+        for _pairing in pairings:
+            score = _pairing.score(player=_strategy, first_only=not BOTH_DIRECTIONS)
+            if score is not None:
+                opponent_name = _pairing.opponent_name(me=_strategy).strip("0123456789")
+                player_scores[opponent_name] = (
+                    math.ceil((player_scores[opponent_name] + score) / 2)
+                    if opponent_name in player_scores
+                    else score
+                )
+
+        total = sum(score for score in player_scores.values())
+        divisor = len(player_scores)
+
+        average = total / divisor
         results.append(
             {
                 "name": _strategy.pretty_name(),
@@ -89,16 +102,26 @@ def simulate(
             }
         )
 
-    print()
-
     if SORTED:
         results = sorted(results, key=lambda r: r["average"], reverse=True)
 
+    # preserve sort order for horizontal axis
+    names = [_result["name"] for _result in results]
     print("".rjust(22) + "  ".join([_result["name"][:3] for _result in results]))
+
     for _result in results:
         print(
             f"{_result['name'].rjust(20)}: "
-            + "  ".join([f"{str(score).rjust(3)}" for score in _result["scores"]])
+            + "  ".join(
+                [
+                    f"{str(score).rjust(3)}"
+                    for score in [
+                        _result["scores"][opponent_name]
+                        for opponent_name in names
+                        if opponent_name in _result["scores"]
+                    ]
+                ]
+            )
             + f"| {_result['average']:.1f}"
         )
 
