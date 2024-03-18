@@ -11,7 +11,7 @@ after creating the first few strategies.
 
 I took a lot of ideas from the `axelrod` python implementation, however I found
 it did not produce accurate results for the first tournament. I needed to tweak
-Downing and Graaskamp in particular, after reading how they were respomnsible for
+Downing and Graaskamp in particular, after reading how they were responsible for
 determining the winners.
 
 It is actually quite hard to make Tit-for-Tat win, I think this may be worthy of
